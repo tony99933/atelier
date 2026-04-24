@@ -295,15 +295,15 @@ function buildIdeasPrompt(userPromo, format){
   const textRule = format === '9:16'
     ? `Le storie NON hanno didascalia: il testo della promo va STAMPATO DIRETTAMENTE SULL'IMMAGINE, in italiano, breve, d'impatto.
 
-═══ REGOLA FERREA — NON INVENTARE NULLA ═══
-Usa ESCLUSIVAMENTE le informazioni presenti nella promo dell'utente. Se l'utente NON ha scritto:
-· numero di telefono → NON INVENTARLO
-· data/scadenza → NON INVENTARLA
-· indirizzo / nome centro / email → NON INVENTARLI
-· percentuali o cifre diverse da quelle scritte → NON INVENTARLE
-Niente placeholder: "012345678", "XXX", "XX/XX", "01/01/2025", "info@centro.it", "Via Roma 1", nomi di centro fittizi sono VIETATI.
-Se manca un dato, TACI su quel punto. Meglio una CTA generica ("Prenota ora") che una finta. Prima di concludere, RILEGGI il testo e cancella qualsiasi elemento che non compaia esplicitamente nella promo originale.
-CTA ammesse: "Prenota", "Prenota ora", "Chiamaci", "Link in bio", "Scopri di più", "Ti aspettiamo". VIETATA la CTA "DM" / "scrivimi in DM" / "mandami un DM".
+═══ REGOLA FERREA — SOLO QUELLO CHE L'UTENTE HA SCRITTO ═══
+Il testo sovrimpresso deve contenere ESCLUSIVAMENTE le informazioni presenti nella promo dell'utente. Non aggiungi NULLA che non sia esplicitamente scritto. In particolare NON aggiungere di tua iniziativa:
+· call-to-action / inviti all'azione (es. "Prenota", "Chiamaci", "Ti aspettiamo", "Scopri di più", "Solo oggi", "Affrettati"): se l'utente non li ha scritti, non li metti.
+· numeri di telefono, indirizzi, nomi di centro, email, siti web, orari, date, scadenze, percentuali, cifre: se non sono nella promo, NON esistono.
+· urgenza fittizia, countdown, claim come "Offerta limitata", "Posti esauriti", "Ultimi giorni": vietati se non dichiarati dall'utente.
+
+Niente placeholder tipo "012345678", "XXX", "XX/XX", "01/01/2025", "info@centro.it", "Via Roma 1".
+Se la promo dell'utente è molto scarna (es. solo "ceretta 20 euro anziché 30"), il testo sull'immagine sarà altrettanto scarno e pulito — meglio così che riempito di invenzioni.
+Prima di restituire il JSON, rileggi ogni testo e RIMUOVI qualunque parola, numero o CTA che non compaia testualmente nella promo originale.
 
 ═══ TIPOGRAFIA EDITORIALE — IL TESTO DEVE ESSERE BELLO ═══
 Non una scritta piatta tutta stesso font/size come un Canva base. DEVE avere composizione editoriale drammatica. Nel prompt inglese descrivi ESATTAMENTE questa composizione tipografica:
@@ -333,7 +333,7 @@ Nel prompt inglese scrivi il testo italiano ESATTO tra virgolette doppie, e desc
 REGOLA FERREA per la didascalia — NON INVENTARE DATI: usa ESCLUSIVAMENTE le informazioni fornite dall'utente. Se non c'è un numero di telefono, una data, un indirizzo, una percentuale o una cifra nella promo, TU NON LI AGGIUNGI. Niente placeholder tipo "012345678", "XXX", "XX/XX", niente nomi centro o indirizzi inventati. Prima di concludere rileggi e cancella qualsiasi dato non presente nella promo originale.`;
 
   const captionField = format === '3:4'
-    ? `Oltre alle 5 idee, genera UNA didascalia italiana unica per il feed (valida per tutte le 5 varianti): hook prima riga, 2-4 righe sensoriali, CTA chiara (Prenota / Chiamaci / Link in bio), 5-8 hashtag, emoji misurate (max 3-4), ~600 caratteri hashtag esclusi.`
+    ? `Oltre alle 5 idee, genera UNA didascalia italiana unica per il feed (valida per tutte le 5 varianti): hook prima riga, 2-4 righe sensoriali basate SOLO sul contenuto della promo dell'utente, 5-8 hashtag pertinenti, emoji misurate (max 3-4), ~600 caratteri hashtag esclusi. Non aggiungere CTA, numeri, contatti, date, indirizzi o urgenze se non sono presenti nella promo originale. Se l'utente ha scritto un contatto o una CTA, includili testualmente; altrimenti niente.`
     : ``;
 
   return `Sei social media designer per un centro estetico italiano di fascia medio-alta.
