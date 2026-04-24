@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Atelier · Post Generator</title>
+
+<meta name="theme-color" content="#1a1512">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Atelier">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%231a1512'/><text x='90' y='118' text-anchor='middle' font-family='Georgia,serif' font-size='96' font-style='italic' fill='%23d4a574'>a</text></svg>">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a1512'/><text x='50' y='68' text-anchor='middle' font-family='Georgia,serif' font-size='56' font-style='italic' fill='%23d4a574'>a</text></svg>">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Atelier Post Generator","short_name":"Atelier","start_url":".","display":"standalone","orientation":"portrait","background_color":"%23f5efe7","theme_color":"%231a1512","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27><rect width=%27512%27 height=%27512%27 rx=%27112%27 fill=%27%231a1512%27/><text x=%27256%27 y=%27340%27 text-anchor=%27middle%27 font-family=%27Georgia,serif%27 font-size=%27280%27 font-style=%27italic%27 fill=%27%23d4a574%27>a</text></svg>","sizes":"512x512","type":"image/svg+xml","purpose":"any"}]}'>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f5efe7;--bg-2:#ebe2d4;--ink:#1a1512;--ink-soft:#4a3e35;--muted:#8a7a6b;
+  --line:#d9ccba;--accent:#a67343;--accent-deep:#7a4f2a;--gold:#d4a574;
+  --danger:#9c3b2a;--card:#fbf7f0;--radius:16px;
+  --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{
+  font-family:'Manrope',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;
+  min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(at 20% 0%, rgba(212,165,116,.22), transparent 55%),radial-gradient(at 80% 100%, rgba(166,115,67,.14), transparent 60%);
+  background-attachment:fixed;padding-bottom:calc(24px + var(--safe-bot));
+}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(245,239,231,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:calc(10px + var(--safe-top)) 18px 10px;border-bottom:1px solid transparent;transition:border-color .2s;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.topbar.scrolled{border-bottom-color:var(--line)}
+.brand{font-family:'Fraunces',serif;font-weight:300;font-size:22px;letter-spacing:-.01em;margin:0}
+.brand em{font-style:italic;color:var(--accent)}
+.topbar .gear{all:unset;font-size:20px;color:var(--ink-soft);padding:6px 4px;cursor:pointer;line-height:1}
+.wrap{padding:14px 18px}
+.intro h1{font-family:'Fraunces',serif;font-weight:300;font-size:34px;line-height:1.05;letter-spacing:-.02em;margin:12px 0 6px}
+.intro h1 em{font-style:italic;color:var(--accent)}
+.intro p{color:var(--muted);font-size:15px;margin:0 0 6px}
+label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);margin:22px 0 8px}
+input[type="text"],input[type="password"],textarea,select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;transition:border-color .15s, box-shadow .15s, background .15s;-webkit-appearance:none;appearance:none}
+textarea{resize:vertical;min-height:130px;font-family:inherit;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(166,115,67,.15);background:#fff}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card)}
+.seg button{all:unset;text-align:center;padding:14px 8px;font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .15s, color .15s}
+.seg button + button{border-left:1px solid var(--line)}
+.seg button.active{background:var(--ink);color:var(--bg)}
+.seg button .hint{font-size:11px;opacity:.6;font-weight:400;letter-spacing:.06em}
+.model-pick{display:flex;flex-direction:column;gap:10px}
+.model-pick label.opt{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);cursor:pointer;text-transform:none;letter-spacing:normal;font-size:15px;font-weight:400;color:var(--ink);margin:0;min-height:64px;transition:border-color .15s, background .15s, box-shadow .15s}
+.model-pick label.opt:has(input:checked){border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(166,115,67,.12)}
+.model-pick input{margin-top:4px;accent-color:var(--accent);width:18px;height:18px;flex-shrink:0}
+.model-pick .n{font-weight:600;display:block}
+.model-pick .d{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.primary{display:block;width:100%;margin-top:26px;padding:18px;background:var(--ink);color:var(--bg);border:none;border-radius:var(--radius);font:inherit;font-weight:600;letter-spacing:.04em;font-size:16px;cursor:pointer;min-height:56px;transition:transform .1s, background .15s}
+.primary:active{transform:scale(.985);background:#2a2320}
+.primary:disabled{background:var(--muted);cursor:wait}
+.primary .loading{display:inline-block;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);padding:14px 12px;border-radius:12px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;min-height:48px;transition:background .15s, color .15s;width:100%}
+.ghost:active{background:var(--bg-2);color:var(--ink)}
+.section{margin-top:36px;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section h2{font-family:'Fraunces',serif;font-weight:300;font-style:italic;font-size:28px;margin:0 0 6px;color:var(--accent-deep)}
+.section .lead{color:var(--muted);font-size:14px;margin:0 0 16px}
+.rule{border:0;border-top:1px solid var(--line);margin:28px 0 20px;position:relative}
+.rule::after{content:"✦";position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--bg);color:var(--accent);padding:0 10px;font-size:12px}
+.ideas{display:flex;flex-direction:column;gap:12px}
+.idea{all:unset;display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;cursor:pointer;position:relative;transition:border-color .15s, box-shadow .15s, background .15s, transform .1s}
+.idea:active{transform:scale(.99)}
+.idea:hover{border-color:var(--accent);background:#fff}
+.idea .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:14px;margin-right:10px;vertical-align:middle}
+.idea .title{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:19px;color:var(--ink);line-height:1.2;vertical-align:middle}
+.idea .desc{font-size:14px;color:var(--ink-soft);margin:10px 0 0;line-height:1.45}
+.idea .tag{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-deep);background:rgba(166,115,67,.1);padding:3px 8px;border-radius:10px;margin-top:10px}
+.idea.warn{border-color:var(--danger);background:#fdf5f3}
+.idea .warn-badge{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--danger);background:rgba(156,59,42,.1);padding:3px 8px;border-radius:10px;margin:10px 6px 0 0}
+.idea .warn-list{font-size:12px;color:var(--danger);margin:8px 0 0;line-height:1.4}
+.back-btn{all:unset;display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--accent-deep);padding:8px 12px;margin-bottom:14px;cursor:pointer;border-radius:8px;font-weight:500}
+.back-btn:active{background:var(--bg-2)}
+.canvas{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:0 1px 0 rgba(26,21,18,.04), 0 12px 40px -20px rgba(26,21,18,.25)}
+.img-frame{width:100%;border-radius:12px;overflow:hidden;background:var(--bg-2);display:flex;align-items:center;justify-content:center;position:relative}
+.img-frame img{width:100%;height:auto;display:block}
+.img-frame.ratio916{aspect-ratio:9/16}
+.img-frame.ratio34{aspect-ratio:3/4}
+.img-frame .ph{color:var(--muted);font-style:italic;font-size:14px;text-align:center;padding:20px}
+.caption-box{margin-top:14px;padding:16px;background:var(--bg);border:1px solid var(--line);border-radius:12px;font-size:15px;line-height:1.55;white-space:pre-wrap;color:var(--ink);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions button{flex:1}
+.edit-box{margin-top:22px;padding:16px;background:var(--card);border:1px dashed var(--line);border-radius:var(--radius)}
+.edit-box label{margin-top:0}
+.edit-box textarea{min-height:90px}
+.status{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px;font-style:italic;line-height:1.4;word-break:break-word}
+.status.err{color:var(--danger);font-style:normal}
+.status.ok{color:var(--accent-deep)}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(26,21,18,.5);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+.modal.open{display:flex}
+.sheet{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:560px;padding:22px 20px calc(28px + var(--safe-bot));max-height:85vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.sheet-grip{width:40px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 16px}
+.sheet h3{font-family:'Fraunces',serif;font-weight:300;font-size:22px;margin:0 0 4px}
+.sheet h3 em{font-style:italic;color:var(--accent)}
+.help{font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.45}
+.help a{color:var(--accent-deep);text-decoration:underline}
+.sheet-close{margin-top:18px;width:100%;padding:14px;background:var(--ink);color:var(--bg);border:none;border-radius:12px;font:inherit;font-weight:600;cursor:pointer;min-height:52px}
+.prompt-peek{margin-top:12px;font-size:12px;color:var(--muted)}
+.prompt-peek summary{cursor:pointer;padding:6px 0;font-style:italic;list-style:none}
+.prompt-peek summary::-webkit-details-marker{display:none}
+.prompt-peek summary::before{content:"▸ ";transition:transform .2s}
+.prompt-peek[open] summary::before{content:"▾ "}
+.prompt-peek pre{white-space:pre-wrap;font-family:inherit;margin:4px 0 0;padding:10px;background:var(--bg);border-radius:8px;color:var(--ink-soft);font-size:12px}
+footer{text-align:center;margin-top:40px;font-size:10px;color:var(--muted);letter-spacing:.16em;text-transform:uppercase}
+@media (min-width:640px){
+  .wrap{max-width:560px;margin:0 auto;padding:20px 24px}
+  .topbar{padding-left:calc(50% - 280px);padding-right:calc(50% - 280px)}
+  .intro h1{font-size:42px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar">
+  <h2 class="brand">Atelier <em>·</em> beauty</h2>
+  <button class="gear" id="openSettings" aria-label="Impostazioni">⚙︎</button>
+</div>
+
+<div class="wrap">
+
+<section class="intro">
+  <h1>Post <em>generator</em></h1>
+  <p>Descrivi la promo. Scegli l'idea. Pubblica.</p>
+</section>
+
+<div id="inputSection">
+  <label for="promo">La tua promo</label>
+  <textarea id="promo" placeholder="Es. ceretta 20 euro anziché 30" autocapitalize="sentences" autocorrect="on"></textarea>
+
+  <label>Formato</label>
+  <div class="seg" id="format-seg">
+    <button type="button" data-fmt="9:16" class="active">Story<span class="hint">9 : 16</span></button>
+    <button type="button" data-fmt="3:4">Post<span class="hint">3 : 4</span></button>
+  </div>
+
+  <label>Modello immagine</label>
+  <div class="model-pick">
+    <label class="opt">
+      <input type="radio" name="imgmodel" value="gemini-3-pro-image-preview" checked>
+      <span><span class="n">Nano Banana Pro 🍌</span><span class="d">Massima qualità · più lento</span></span>
+    </label>
+    <label class="opt">
+      <input type="radio" name="imgmodel" value="gemini-3.1-flash-image-preview">
+      <span><span class="n">Nano Banana 2 🍌</span><span class="d">Veloce · per iterazioni rapide</span></span>
+    </label>
+  </div>
+
+  <button class="primary" id="proposeBtn">Proponi 5 idee ✨</button>
+  <p class="status" id="status"></p>
+</div>
+
+<section class="section" id="ideasSection" style="display:none">
+  <hr class="rule">
+  <h2>Scegli un'idea</h2>
+  <p class="lead" id="ideasLead">Tocca quella che ti piace per generare l'immagine.</p>
+  <div class="ideas" id="ideasList"></div>
+  <button class="ghost" id="regenIdeas" style="margin-top:16px">↻ Proponi altre 5 idee</button>
+  <button class="ghost" id="editInput" style="margin-top:8px">← Modifica la promo</button>
+</section>
+
+<section class="section" id="resultSection" style="display:none">
+  <hr class="rule">
+  <button class="back-btn" id="backToIdeas">← Torna alle idee</button>
+  <h2 id="resultTitle">Anteprima</h2>
+  <p class="lead" id="resultLead"></p>
+
+  <div class="canvas">
+    <div class="img-frame ratio916" id="imgFrame">
+      <span class="ph" id="imgPlaceholder">Generazione in corso…</span>
+      <img id="imgOut" style="display:none" alt="Post">
+    </div>
+    <details class="prompt-peek" id="promptPeek" style="display:none">
+      <summary>Prompt usato</summary>
+      <pre id="promptText"></pre>
+    </details>
+    <div class="caption-box" id="captionOut" style="display:none"></div>
+    <div class="actions">
+      <button class="ghost" id="dlImg">⬇ Scarica</button>
+      <button class="ghost" id="copyCap" style="display:none">⎘ Copia testo</button>
+    </div>
+  </div>
+
+  <div class="edit-box">
+    <label for="edit">Modifiche all'immagine</label>
+    <textarea id="edit" placeholder="Es. luce più calda, aggiungi asciugamano bianco, sfondo più minimal…" autocapitalize="sentences"></textarea>
+    <button class="primary" id="regenerate" style="margin-top:12px">Rigenera immagine</button>
+    <p class="status" id="status2"></p>
+  </div>
+</section>
+
+<footer>Atelier · v2</footer>
+
+</div>
+
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <h3>Impostazioni <em>· API key</em></h3>
+    <label for="apikey">Google AI Studio API key</label>
+    <input type="password" id="apikey" placeholder="AIza…" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <p class="help">Salvata solo su questo dispositivo. Richiedila su <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.</p>
+    <button class="sheet-close" id="closeSettings">Fatto</button>
+  </div>
+</div>
+
+<script>
+const state = { format:'9:16', promo:'', ideas:[], caption:null, selected:null, lastImagePrompt:null, lastImageDataUrl:null, lastImageMime:'image/png' };
+const $ = id => document.getElementById(id);
+const status = $('status');
+const status2 = $('status2');
+
+const topbar = $('topbar');
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 4) topbar.classList.add('scrolled'); else topbar.classList.remove('scrolled');
+}, {passive:true});
+
+const modal = $('settingsModal');
+$('openSettings').addEventListener('click', () => modal.classList.add('open'));
+$('closeSettings').addEventListener('click', () => { modal.classList.remove('open'); saveKey(); });
+modal.addEventListener('click', e => { if(e.target === modal){ modal.classList.remove('open'); saveKey(); }});
+
+const apiKeyInput = $('apikey');
+apiKeyInput.value = localStorage.getItem('gemini_api_key') || '';
+function saveKey(){ localStorage.setItem('gemini_api_key', apiKeyInput.value.trim()); }
+apiKeyInput.addEventListener('change', saveKey);
+apiKeyInput.addEventListener('blur', saveKey);
+
+function getKey(){
+  const k = (apiKeyInput.value || localStorage.getItem('gemini_api_key') || '').trim();
+  if(!k){ modal.classList.add('open'); setTimeout(()=>apiKeyInput.focus(),200); throw new Error('Inserisci prima la tua API key (icona ⚙︎).'); }
+  return k;
+}
+
+$('format-seg').addEventListener('click', e => {
+  const b = e.target.closest('button[data-fmt]');
+  if(!b) return;
+  document.querySelectorAll('#format-seg button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  state.format = b.dataset.fmt;
+  const frame = $('imgFrame');
+  frame.classList.remove('ratio916','ratio34');
+  frame.classList.add(state.format === '9:16' ? 'ratio916' : 'ratio34');
+});
+
+const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+
+async function callText(prompt, schema){
+  const key = getKey();
+  const url = `${API_BASE}gemini-3-flash-preview:generateContent?key=${encodeURIComponent(key)}`;
+  const body = { contents:[{role:'user',parts:[{text:prompt}]}], generationConfig:{ temperature:0.9, responseMimeType:'application/json', responseSchema:schema } };
+  const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok){ const t=await r.text(); throw new Error('API testo '+r.status+': '+t.slice(0,200)); }
+  const data = await r.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if(!text) throw new Error('Risposta testo vuota.');
+  try { return JSON.parse(text); } catch(e){ throw new Error('JSON invalido: '+text.slice(0,160)); }
+}
+
+async function callImage(prompt, modelId, aspectRatio){
+  const key = getKey();
+  const url = `${API_BASE}${modelId}:generateContent?key=${encodeURIComponent(key)}`;
+  const withCfg = { contents:[{role:'user',parts:[{text:prompt}]}], generationConfig:{ responseModalities:['IMAGE'], imageConfig:{ aspectRatio } } };
+  let r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(withCfg)});
+  if(!r.ok){
+    const fb = { contents:[{role:'user',parts:[{text:prompt}]}], generationConfig:{ responseModalities:['IMAGE'] } };
+    r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fb)});
+  }
+  if(!r.ok){ const t=await r.text(); throw new Error('API immagine '+r.status+': '+t.slice(0,280)); }
+  const data = await r.json();
+  const parts = data?.candidates?.[0]?.content?.parts || [];
+  const imgPart = parts.find(p => p.inlineData && p.inlineData.data);
+  if(!imgPart) throw new Error('Nessuna immagine nella risposta.');
+  return { dataUrl:`data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`, mime:imgPart.inlineData.mimeType };
+}
+
+function buildIdeasPrompt(userPromo, format){
+  const social = format === '9:16' ? 'Instagram story 9:16 (vertical, portrait)' : 'Instagram post 3:4 (portrait)';
+  const textRule = format === '9:16'
+    ? `Le storie NON hanno didascalia: il testo della promo va STAMPATO DIRETTAMENTE SULL'IMMAGINE, in italiano, breve, d'impatto.
+
+═══ REGOLA FERREA — NON INVENTARE NULLA ═══
+Usa ESCLUSIVAMENTE le informazioni presenti nella promo dell'utente. Se l'utente NON ha scritto:
+· numero di telefono → NON INVENTARLO
+· data/scadenza → NON INVENTARLA
+· indirizzo / nome centro / email → NON INVENTARLI
+· percentuali o cifre diverse da quelle scritte → NON INVENTARLE
+Niente placeholder: "012345678", "XXX", "XX/XX", "01/01/2025", "info@centro.it", "Via Roma 1", nomi di centro fittizi sono VIETATI.
+Se manca un dato, TACI su quel punto. Meglio una CTA generica ("Prenota ora") che una finta. Prima di concludere, RILEGGI il testo e cancella qualsiasi elemento che non compaia esplicitamente nella promo originale.
+CTA ammesse: "Prenota", "Prenota ora", "Chiamaci", "Link in bio", "Scopri di più", "Ti aspettiamo". VIETATA la CTA "DM" / "scrivimi in DM" / "mandami un DM".
+
+═══ TIPOGRAFIA EDITORIALE — IL TESTO DEVE ESSERE BELLO ═══
+Non una scritta piatta tutta stesso font/size come un Canva base. DEVE avere composizione editoriale drammatica. Nel prompt inglese descrivi ESATTAMENTE questa composizione tipografica:
+
+1. GERARCHIA DI SCALA estrema: il numero/parola chiave (prezzo nuovo, % sconto, parola hero) molto più grande del resto (3-5x). Il contorno discreto.
+
+2. PATTERN TIPOGRAFICI per casi concreti — usali se pertinenti:
+   · CONFRONTO PREZZI (es. "20€ anziché 30€"): il prezzo nuovo ENORME in accent color (oro caldo / terracotta) con serif italic elegante. Il prezzo vecchio molto più piccolo, in colore muted (warm grey), CON UNA LINEA ORIZZONTALE CHE LO BARRA (strikethrough line cutting through the number). Disponili su due livelli, non in fila.
+   · SCONTO PERCENTUALE ("-20%", "-30%"): il "−20%" enorme in numeri decorativi serif italic, colore accent. Eventualmente simbolo % stilizzato più piccolo.
+   · SCADENZA: data grande + "fino al" piccolo sopra/accanto, anche ruotato leggermente.
+   · PAROLE EMOZIONALI/POETICHE ("Leggerezza", "Rinascita", "Dolcezza"): italic serif editoriale (Fraunces/Playfair/Canela-style), ampia interlinea, lowercase o small caps.
+   · PAROLE PRATICHE (prezzi, date, CTA): sans serif moderno pulito (Inter/Neue Haas-style) oppure serif moderno neutro, UPPERCASE con letter-spacing.
+
+3. MIX DI FONT: almeno 2 font diversi per creare contrasto (serif italic editoriale + sans moderno). Mai un unico font per tutto.
+
+4. PALETTE DEL TESTO: massimo 2 colori. Uno dominante (bianco crema / ivory / nero caldo) + uno accento (oro, terracotta, bronzo). Alto contrasto sul fondo.
+
+5. DETTAGLI DECORATIVI (usa con parsimonia): sottili linee orizzontali, piccoli asterischi ✦ ✧, punti centrali ·, graffette { }, numeri romani decorativi. Solo se rinforzano l'eleganza, mai riempitivo.
+
+6. ALLINEAMENTO e LAYOUT: varia. Asimmetria, ancoraggio a sinistra o a destra, numero hero a tutta larghezza, testo piccolo allineato su una colonna. Usa rotazioni lievi (±2-5°) per elementi secondari se aumenta l'eleganza.
+
+7. POSIZIONE: upper/center/lower third in base allo sfondo. Respiro ai bordi (padding generoso). Leggibilità massima.
+
+Nel prompt inglese scrivi il testo italiano ESATTO tra virgolette doppie, e descrivi la composizione tipografica passo-passo (scala, font, peso, colore, posizione, decorazioni) come se stessi briefando un art director.`
+    : `Il POST va con immagine PULITA, SENZA testo sovrimpresso. Il messaggio della promo viene veicolato dalla didascalia separata nel feed (che generi a parte).
+
+REGOLA FERREA per la didascalia — NON INVENTARE DATI: usa ESCLUSIVAMENTE le informazioni fornite dall'utente. Se non c'è un numero di telefono, una data, un indirizzo, una percentuale o una cifra nella promo, TU NON LI AGGIUNGI. Niente placeholder tipo "012345678", "XXX", "XX/XX", niente nomi centro o indirizzi inventati. Prima di concludere rileggi e cancella qualsiasi dato non presente nella promo originale.`;
+
+  const captionField = format === '3:4'
+    ? `Oltre alle 5 idee, genera UNA didascalia italiana unica per il feed (valida per tutte le 5 varianti): hook prima riga, 2-4 righe sensoriali, CTA chiara (Prenota / Chiamaci / Link in bio), 5-8 hashtag, emoji misurate (max 3-4), ~600 caratteri hashtag esclusi.`
+    : ``;
+
+  return `Sei social media designer per un centro estetico italiano di fascia medio-alta.
+Stile visivo di brand: beauty editoriale, luce naturale calda, palette nude/avorio/terracotta/oro, minimal, sensoriale, professionale. NIENTE stock photography scontata, niente persone generiche sorridenti se non richiesto, niente foto tipo "prima/dopo" cheap.
+
+L'estetista vuole creare una ${social} per questa promo: """${userPromo}"""
+
+Il tuo compito: proporre 5 IDEE VISIVE DIVERSE, concrete e specifiche PER QUESTA promo (non categorie astratte). Esempi di direzioni tra cui mescolare: donna durante il trattamento in cabina, macro di un dettaglio del servizio, flat lay di strumenti/prodotti usati, still life evocativo, ritratto del risultato, ambiente del centro, gesto professionale delle mani, texture/materiali. Le 5 devono essere tipologie DIVERSE tra loro per darle scelta reale.
+
+${textRule}
+
+${captionField}
+
+Produci JSON. Per OGNI idea:
+- "title": titolo sintetico in italiano (3-6 parole, es. "Cera calda in cabina", "Macro gamba levigata", "Flat lay strumenti ceretta")
+- "description": breve descrizione italiana della scena (1 frase, max 20 parole, cosa si vede e che mood)
+- "image_prompt": prompt IN INGLESE per text-to-image che INIZIA con "${social}," e descrive la scena: soggetto, composizione, luce, palette, materiali, atmosfera, lente/profondità di campo, ${format === '9:16' ? 'più la COMPOSIZIONE TIPOGRAFICA completa del testo sovrimpresso seguendo TUTTE le regole typography sopra (scala, font, peso, colore, posizione, strikethrough, decorazioni)' : 'NESSUN testo sovrimpresso'}. Includi "aspect ratio ${format}" nel prompt. Max 200 parole.`;
+}
+
+function buildEditPrompt(orig, edits, format){
+  return `${orig}\n\nApply these modifications while keeping the overall concept, any existing text overlay, and aspect ratio ${format}: ${edits}`;
+}
+
+function setBusy(btn, busy, lbl){
+  btn.disabled = busy;
+  if(busy){ btn.dataset.orig = btn.dataset.orig || btn.textContent; btn.innerHTML = `<span class="loading">${lbl||'Lavorando…'}</span>`; }
+  else if(btn.dataset.orig){ btn.textContent = btn.dataset.orig; btn.dataset.orig=''; }
+}
+function setStatus(el, msg, kind){
+  el.textContent = msg || '';
+  el.classList.remove('err','ok');
+  if(kind) el.classList.add(kind);
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// Rileva dati probabilmente inventati dal modello: numeri lunghi non presenti
+// nella promo originale, placeholder tipo XXX, XX/XX, sequenze 01234…, email/URL fittizi.
+function findFabricated(text, originalPromo){
+  const warnings = [];
+  if(!text) return warnings;
+
+  // normalizza promo: rimuovi spazi, punti, trattini nei numeri per confronto
+  const promoNorm = (originalPromo || '').toLowerCase().replace(/[\s\.\-]/g,'');
+
+  // 1. Numeri di 6+ cifre consecutive presenti nel testo ma NON nella promo
+  const numMatches = text.match(/\d{6,}/g) || [];
+  for(const n of numMatches){
+    if(!promoNorm.includes(n)){
+      warnings.push('numero inventato: '+n);
+    }
+  }
+
+  // 2. Sequenze sospette tipo 012345678, 1234567890
+  if(/0?123456789?0?/.test(text.replace(/\s/g,''))) warnings.push('numero placeholder (0123456789)');
+
+  // 3. Placeholder letterali
+  if(/\b[Xx]{3,}\b/.test(text)) warnings.push('placeholder XXX');
+  if(/[Xx]{2,}[\/\.\-][Xx]{2,}/.test(text)) warnings.push('placeholder XX/XX');
+
+  // 4. Email/URL non nella promo
+  const emailRe = /\b[\w\.-]+@[\w\.-]+\.\w{2,}\b/g;
+  const emails = (text.match(emailRe) || []).filter(e => !originalPromo.toLowerCase().includes(e.toLowerCase()));
+  if(emails.length) warnings.push('email inventata: '+emails[0]);
+
+  // 5. Telefoni italiani "verosimili" (prefisso 0 + 6-9 cifre, o 3 + 9 cifre mobile) non in promo
+  const phoneRe = /\b(?:\+?39\s?)?(?:0\d{1,3}[\s\.\-]?\d{5,8}|3\d{2}[\s\.\-]?\d{6,7})\b/g;
+  const phones = (text.match(phoneRe) || [])
+    .map(p => p.replace(/[\s\.\-]/g,''))
+    .filter(p => !promoNorm.replace(/\+?39/,'').includes(p.replace(/\+?39/,'')));
+  if(phones.length) warnings.push('telefono non in promo: '+phones[0]);
+
+  return [...new Set(warnings)];
+}
+
+function renderIdeas(){
+  const list = $('ideasList');
+  list.innerHTML = '';
+  state.ideas.forEach((idea, i) => {
+    // check dati inventati nel prompt (dove vive il testo sovrimpresso)
+    const warnings = findFabricated(idea.image_prompt, state.promo);
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'idea' + (warnings.length ? ' warn' : '');
+    card.dataset.idx = i;
+    const warnBlock = warnings.length
+      ? `<span class="warn-badge">⚠ verifica</span><p class="warn-list">Possibili dati non forniti: ${escapeHtml(warnings.join(' · '))}</p>`
+      : '';
+    card.innerHTML = `
+      <span class="num">${i+1}</span>
+      <span class="title">${escapeHtml(idea.title)}</span>
+      <p class="desc">${escapeHtml(idea.description)}</p>
+      ${warnBlock}
+      <span class="tag">Tocca per generare</span>
+    `;
+    card.addEventListener('click', () => selectIdea(i));
+    list.appendChild(card);
+  });
+}
+
+async function selectIdea(idx){
+  const idea = state.ideas[idx];
+  if(!idea) return;
+  state.selected = idea;
+  state.lastImagePrompt = idea.image_prompt;
+
+  $('ideasSection').style.display = 'none';
+  $('resultSection').style.display = 'block';
+  $('resultTitle').textContent = idea.title;
+  $('resultLead').textContent = idea.description;
+
+  const capBox = $('captionOut'), copyBtn = $('copyCap');
+  if(state.format === '3:4' && state.caption){
+    const capWarn = findFabricated(state.caption, state.promo);
+    capBox.textContent = (capWarn.length ? '⚠ Verifica: '+capWarn.join(' · ')+'\n\n' : '') + state.caption;
+    capBox.style.display = 'block';
+    copyBtn.style.display = '';
+  } else {
+    capBox.style.display = 'none';
+    copyBtn.style.display = 'none';
+  }
+
+  $('promptText').textContent = idea.image_prompt;
+  $('promptPeek').style.display = 'block';
+  $('imgOut').style.display = 'none';
+  $('imgPlaceholder').style.display = 'block';
+  $('imgPlaceholder').textContent = 'Genero l\'immagine…';
+  $('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+
+  setStatus(status2,'');
+  try {
+    const model = document.querySelector('input[name="imgmodel"]:checked').value;
+    const img = await callImage(idea.image_prompt, model, state.format);
+    state.lastImageDataUrl = img.dataUrl;
+    state.lastImageMime = img.mime;
+    $('imgOut').src = img.dataUrl;
+    $('imgOut').style.display = 'block';
+    $('imgPlaceholder').style.display = 'none';
+    setStatus(status2, 'Pronto.', 'ok');
+  } catch(err){
+    console.error(err);
+    setStatus(status2, err.message || 'Errore', 'err');
+    $('imgPlaceholder').textContent = 'Errore. Riprova dal bottone Rigenera.';
+  }
+}
+
+$('proposeBtn').addEventListener('click', async () => {
+  const btn = $('proposeBtn');
+  setStatus(status,'');
+  const promo = $('promo').value.trim();
+  if(!promo){ setStatus(status,'Scrivi prima la tua promo.','err'); return; }
+  state.promo = promo;
+
+  setBusy(btn, true, 'Penso a 5 idee…');
+  try {
+    const ideaSchema = { type:'object', properties:{ title:{type:'string'}, description:{type:'string'}, image_prompt:{type:'string'} }, required:['title','description','image_prompt'] };
+    const schema = state.format === '9:16'
+      ? { type:'object', properties:{ ideas:{ type:'array', items:ideaSchema, minItems:5, maxItems:5 } }, required:['ideas'] }
+      : { type:'object', properties:{ ideas:{ type:'array', items:ideaSchema, minItems:5, maxItems:5 }, caption:{type:'string'} }, required:['ideas','caption'] };
+    const out = await callText(buildIdeasPrompt(promo, state.format), schema);
+
+    state.ideas = out.ideas || [];
+    state.caption = out.caption || null;
+    renderIdeas();
+    $('ideasSection').style.display = 'block';
+    $('resultSection').style.display = 'none';
+    $('ideasLead').textContent = state.format === '9:16'
+      ? 'Tocca l\'idea che ti piace. Il testo della promo sarà stampato sull\'immagine.'
+      : 'Tocca l\'idea che ti piace. La didascalia è già pronta e apparirà qui sotto.';
+    $('ideasSection').scrollIntoView({behavior:'smooth',block:'start'});
+    setStatus(status,'');
+  } catch(err){
+    console.error(err);
+    setStatus(status, err.message || 'Errore','err');
+  } finally { setBusy(btn, false); }
+});
+
+$('regenIdeas').addEventListener('click', () => $('proposeBtn').click());
+$('editInput').addEventListener('click', () => {
+  $('ideasSection').style.display = 'none';
+  $('inputSection').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+$('backToIdeas').addEventListener('click', () => {
+  $('resultSection').style.display = 'none';
+  $('ideasSection').style.display = 'block';
+  $('ideasSection').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+$('regenerate').addEventListener('click', async () => {
+  const btn = $('regenerate');
+  setStatus(status2,'');
+  if(!state.lastImagePrompt){ setStatus(status2,'Scegli prima un\'idea.','err'); return; }
+  const edits = $('edit').value.trim();
+  const prompt = edits ? buildEditPrompt(state.lastImagePrompt, edits, state.format) : state.lastImagePrompt;
+  setBusy(btn, true, 'Rigenero…');
+  $('imgOut').style.display = 'none';
+  $('imgPlaceholder').style.display = 'block';
+  $('imgPlaceholder').textContent = 'Rigenero…';
+  try {
+    const model = document.querySelector('input[name="imgmodel"]:checked').value;
+    const img = await callImage(prompt, model, state.format);
+    state.lastImageDataUrl = img.dataUrl;
+    state.lastImageMime = img.mime;
+    $('imgOut').src = img.dataUrl;
+    $('imgOut').style.display = 'block';
+    $('imgPlaceholder').style.display = 'none';
+    $('promptText').textContent = prompt;
+    setStatus(status2, edits ? 'Rigenerato con le tue modifiche.' : 'Rigenerato.','ok');
+  } catch(err){
+    console.error(err);
+    setStatus(status2, err.message || 'Errore','err');
+    $('imgPlaceholder').textContent = 'Errore.';
+  } finally { setBusy(btn, false); }
+});
+
+$('dlImg').addEventListener('click', () => {
+  if(!state.lastImageDataUrl){ alert('Nessuna immagine.'); return; }
+  const ext = (state.lastImageMime.split('/')[1] || 'png').replace('jpeg','jpg');
+  const stamp = new Date().toISOString().replace(/[:.]/g,'-').slice(0,16);
+  const a = document.createElement('a');
+  a.href = state.lastImageDataUrl;
+  a.download = `atelier-${state.format.replace(':','x')}-${stamp}.${ext}`;
+  document.body.appendChild(a); a.click(); a.remove();
+});
+
+$('copyCap').addEventListener('click', async () => {
+  if(!state.caption) return;
+  try {
+    await navigator.clipboard.writeText(state.caption);
+    const b = $('copyCap'); const o = b.textContent;
+    b.textContent = '✓ Copiato';
+    setTimeout(()=>b.textContent=o, 1500);
+  } catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = state.caption;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+    alert('Copiato.');
+  }
+});
+</script>
+</body>
+</html>
